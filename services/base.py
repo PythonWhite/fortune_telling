@@ -1,14 +1,14 @@
-from db import get_db, get_redis
+from db import db, get_redis
 
 
 class ControlBase():
     def __init__(self, model):
-        self.db = get_db()
+        self.db = db
         self.r = get_redis()
         self.model = model
 
     def get_one(self, id):
-        return self.db.query(self.model).get(id)
+        return self.model.query.get(id)
 
     def get_list(self):
-        return self.db.query(self.model)
+        return self.model.query
