@@ -57,14 +57,33 @@ class ControlBase():
         self.db.session.commit()
         return True, instance
 
-    def batch_update(self, uniques, data):
-        pass
+    def batch_update(self, data):
+        for i in data:
+            if not self.check_data(i):
+                return False, ERROR_DATA_FORMAT
+            elif "id" not in i:
+                return False, ERROR_UNIQUE_DATA
+
+        self.db.session.bulk_update_mappings(self.model, data)
+        self.db.session.commit()
+
+        return True, ""
 
     def delete(self, uniques):
-        pass
+        if not self.check_data(uniques):
+          return False, ERROR_DATA_FORMAT
 
-    def batch_delete(self, uniques):
-        pass
+        self.db.query(self.model).filter_by(
+          **uniques
+        ).delete(
+          synchronize_session=False
+        )
+        self.db.session.commit()
+
+        return True, ""
+
+  #  def batch_delete(self, uniques):
+  #      pass
 
     def check_data(self, data):
         if isinstance(data, str) and hasattr(self.model, data):
