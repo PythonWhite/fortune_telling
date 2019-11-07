@@ -14,10 +14,12 @@ class UserControl(ControlBase):
 
     def check_password(self, user, pwd):
         pwd = self.gen_password(pwd)
-        if user and user.password == pwd:
-            return True
+        if not user:
+            return False, "用户名错误"
+        elif user.password != pwd:
+            return False, "密码错误"
 
-        return False
+        return True, "登录成功"
 
     def get_user_by_name(self, name):
         return self.model.query.filter(
