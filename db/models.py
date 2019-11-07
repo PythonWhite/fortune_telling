@@ -1,4 +1,5 @@
 import uuid
+from sqlalchemy import UniqueConstraint
 from datetime import datetime
 from db import db
 
@@ -23,7 +24,7 @@ class UserModel(db.Model):
         64), nullable=True, comment="真实姓名")
     sex = db.Column('sex', db.Integer, default=1, comment="1男，0女")
     email = db.Column('email', db.String(128), nullable=True)
-    phone = db.Column('phone', db.String(32), nullable=True)
+    phone = db.Column('phone', db.String(11), nullable=True)
     integral = db.Column('integral', db.String(32), default=0, comment="积分")
     ip = db.Column('ip', db.String(32), nullable=True)
     last_login = db.Column('last_login', db.DateTime, default=datetime.now)
@@ -43,7 +44,7 @@ class AdminUserModel(db.Model):
     avatar = db.Column('avatar', db.String(128), default="", comment="头像")
     password = db.Column('password', db.String(64))
     email = db.Column('email', db.String(128), nullable=True)
-    phone = db.Column('phone', db.String(32), nullable=True)
+    phone = db.Column('phone', db.String(11), nullable=True)
     last_login = db.Column('last_login', db.DateTime, default=datetime.now)
     created = db.Column('created', db.DateTime, default=datetime.now)
     updated = db.Column('updated', db.DateTime,
@@ -59,7 +60,6 @@ class PermissionModel(db.Model):
 
     id = db.Column('id', db.Integer, primary_key=True)
     name = db.Column('name', db.String(64))
-    user_id = db.Column('user_id', db.Integer, nullable=True)
     created = db.Column('created', db.DateTime, default=datetime.now)
     updated = db.Column('updated', db.DateTime,
                         default=datetime.now, onupdate=datetime.now)
@@ -136,6 +136,8 @@ class LotsModel(db.Model):
     poetry = db.Column('poetry', db.Text, comment="诗文", nullable=True)
     p_solution = db.Column('p_solution', db.Text, comment="诗解", nullable=True)
     meaning = db.Column('meaning', db.Text, comment="签意", nullable=True)
+
+    UniqueConstraint("lot_type", "num", name="type_num")
 
 
 class PreDestinationModel(db.Model):

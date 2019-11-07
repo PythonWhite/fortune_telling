@@ -71,19 +71,19 @@ class ControlBase():
 
     def delete(self, uniques):
         if not self.check_data(uniques):
-          return False, ERROR_DATA_FORMAT
+            return False, ERROR_DATA_FORMAT
 
         self.db.query(self.model).filter_by(
-          **uniques
+            **uniques
         ).delete(
-          synchronize_session=False
+            synchronize_session=False
         )
         self.db.session.commit()
 
         return True, ""
 
-  #  def batch_delete(self, uniques):
-  #      pass
+    #  def batch_delete(self, uniques):
+    #      pass
 
     def check_data(self, data):
         if isinstance(data, str) and hasattr(self.model, data):
@@ -97,6 +97,13 @@ class ControlBase():
         else:
             return False
 
+    def before_save(self, data):
+        return data
+
     @abstractmethod
     def format_result(self, data):
+        pass
+
+    @abstractmethod
+    def format_results(self, data):
         pass
