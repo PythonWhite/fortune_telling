@@ -1,0 +1,13 @@
+before_script:
+  - python3 --version
+  - python3 -m pip uninstall pip
+  - apt install python3-pip --reinstall
+  - apt-get install -y libssl-dev
+  - pip3 install --no-cache-dir  -r requirements.txt -i https://pypi.douban.com/simple
+
+pre-check:
+  script:
+    - bash runtest.sh
+    - mv local_settings.py.template local_settings.py
+    - python3 manage.py db upgrade
+    - echo "db upgrade"
