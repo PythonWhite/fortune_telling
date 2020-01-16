@@ -87,3 +87,17 @@ class AdminUser(Base, TimestampMixin):
         self._password = generate_password_hash(new_password)
         self.save()
         return True
+
+    @classmethod
+    def get_all(cls, delete=False):
+        return cls.query.filter(cls.delete == delete).order_by(cls.created_at.desc())
+
+    @classmethod
+    def get_user_by_id(cls, _id, delete=False):
+        return cls.query.filter(cls.id == _id, cls.delete == delete).first()
+
+    @classmethod
+    def exist_user(cls, q_field, q, exclude_user_id=None):
+        query = cls.query.filter_by(**{q_field: q}).filter(cls.id != exclude_user_id)
+        return bool(query.first())
+
