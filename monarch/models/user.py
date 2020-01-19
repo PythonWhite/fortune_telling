@@ -21,8 +21,7 @@ class User(Base, TimestampMixin):
     account = Column(String(64), unique=True, comment="账号")
     _password = Column("password", String(128))
     avatar = Column(String(128), default="", comment="头像")
-    nick_name = Column(String(64), comment="昵称")
-    real_name = Column(String(64), nullable=True, comment="真实姓名")
+    name = Column(String(64), comment="昵称")
     sex = Column(Integer, default=0, comment="1男，2女")
     email = Column(String(128), nullable=True, unique=True,)
     phone = Column(String(11), nullable=True, unique=True,)
@@ -48,14 +47,21 @@ class User(Base, TimestampMixin):
         self.save()
         return True
 
+    @classmethod
+    @model_cache(CACHE_USER_BY_ACCOUNT, CACHE_DAY)
+    def get_by_account(cls, account, deleted=False, enabled=True):
+        return cls.query.filter_by(
+            account=account, deleted=deleted, enabled=enabled
+        ).first()
+
 
 class AdminUser(Base, TimestampMixin):
     '''管理员表'''
     __tablename__ = "admin_user"
 
     id = Column(String(32), default=shortuuid.uuid, nullable=False, primary_key=True)
-    nick_name = Column(String(64), comment="昵称")
-    real_name = Column(String(64), nullable=True, comment="真实姓名")
+    account = Column(String(64), unique=True, comment="账号")
+    name = Column(String(64), nullable=True, comment="真实姓名")
     avatar = Column(String(128), default="", comment="头像")
     _password = Column("password", String(128))
     email = Column(String(128), nullable=True)
@@ -101,3 +107,30 @@ class AdminUser(Base, TimestampMixin):
         query = cls.query.filter_by(**{q_field: q}).filter(cls.id != exclude_user_id)
         return bool(query.first())
 
+    @classmethod
+    @model_cache(CACHE_USER_BY_ACCOUNT, CACHE_DAY)
+    def get_by_account(cls, account, deleted=False, enabled=True):
+        return cls.query.filter_by(
+            account=account, deleted=deleted, enabled=enabled
+        ).first()
+
+    def get_menu_ids(self):
+        menu_ids = []
+        if self.permissions:
+            menu_ids = list(
+                reduce(operator.or_, (set(item.permission) for item in self.permissions))
+            )
+        return menu_ids
+
+    def get_menus_tree(self):
+        menus = Permission.query.all()
+        menu_id_set = set(self.get_menu_ids())
+        menu_list = []
+        for menu in menus:
+            menu_data = menu.to_dict(["id", "name", "parent_id"])
+            menu_data["permission"] = menu_data.get("id") in menu_id_set
+            menu_list.append(menu_data)
+        return Permission.menu_list_to_tree(menu_list)
+
+
+from monarch.models.permission import Permission
