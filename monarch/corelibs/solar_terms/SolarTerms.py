@@ -459,6 +459,7 @@ def paiYue(year):
 
     # 显示
     out = "节气  手表时              中气  手表时              农历月  朔的手表时\r\n"
+    jq = {}
     for i in range(tot):
         zm = (i * 2 + 18) % 24
         jm = (i * 2 + 17) % 24  # 中气名节气名
@@ -471,5 +472,5 @@ def paiYue(year):
     return out 
     
 if __name__ == '__main__':
-    print(paiYue(2017))
+    print(paiYue(2020))
     
