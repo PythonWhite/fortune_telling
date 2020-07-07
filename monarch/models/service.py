@@ -10,8 +10,8 @@ class Service(Base, TimestampMixin):
     id = Column(Integer, primary_key=True)
     sid = Column(String(64), default=gen_uuid, nullable=False, index=True)
     service = Column(String(64), comment="服务中文名称")
-    name = Column(String(64))
-    url = Column(String(128))
+    name = Column(String(64), nullable=False)
+    url = Column(String(128), nullable=False)
 
 
 class ServiceLog(Base, TimestampMixin):

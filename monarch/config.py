@@ -16,8 +16,6 @@ SQLALCHEMY_TRACK_MODIFICATIONS = True
 REDIS_URL = "redis://127.0.0.1:6379/0"
 REDIS_MAX_CONNECTIONS = 20
 
-# Sentry DSN 配置
-SENTRY_DSN = ""
 
 # Celery 配置
 CELERY_FORCE_ROOT = True
@@ -28,7 +26,13 @@ CELERY_ACCEPT_CONTENT = ["pickle"]
 CELERY_TASK_SERIALIZER = "pickle"
 CELERY_RESULT_SERIALIZER = "pickle"
 CELERY_ROUTES = {}
-CELERYBEAT_SCHEDULE = {}
+CELERYBEAT_SCHEDULE = {
+    "auto_check_deploy_status": {
+        "task": "monarch.tasks.ai.auto_check_deploy_status",
+        "schedule": datetime.timedelta(seconds=AUTO_CHECK_DEPLOY_STATUS)
+    }
+}
+
 
 # SMS请求域名
 SMS_BASE_URL = ""
