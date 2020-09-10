@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from monarch.models.lots import LotsType, Lots
+from monarch.forms.admin.lots import CurrentLotsTypeSchema
 
 
 def create_lots_type(data):
@@ -10,11 +11,18 @@ def create_lots_type(data):
 
 
 def get_lots_type(data):
-    pass
+    lots_type = LotsType.query_lots_type()
+    result = CurrentLotsTypeSchema().dump(lots_type, many=True).data
+    return Bizs.success(data=result)
 
 
 def delete_lots_type(data):
-    pass
+    id = data["id"]
+    lots_type = LotsType.get(id)
+    if not lots_type:
+        return Bizs.not_found()
+    lots.deleted()
+    return Bizs.success()
 
 
 def edit_lots_type(data):

@@ -12,6 +12,16 @@ class LotsType(Base, TimestampMixin):
     id = Column(Integer, primary_key=True)
     name = Column(String(64), nullable=False)
 
+    @classmethod
+    def query_lots_type(cls, deleted=False):
+        return cls.query.filter(
+            cls.deleted == deleted
+        ).all()
+
+    def delete(self, _hard=False, _commit=True):
+        lots = Lots.get_lots_by_type(self.id)
+        lots.delete(synchronize_session=False)
+
 
 class Lots(Base, TimestampMixin):
     __tablename__ = "lots"
@@ -54,6 +64,12 @@ class Lots(Base, TimestampMixin):
             cls.num == num
         )
         return query.first()
+
+    @classmethod
+    def get_lots_by_type(cls, lots_type):
+        return cls.query.filter(
+            cls.lot_type == lots_type
+        )
 
 
 class Numerology(Base, TimestampMixin):
