@@ -73,6 +73,24 @@ class Numerology(Base, TimestampMixin):
     detail = Column(JSON(), nullable=False, comment="详情")
     star_desc = Column(Text(), nullable=False, comment="星宿解释")
 
+    @classmethod
+    def get_by_day_hour_gan(cls, day_gan, hour_gen):
+        return cls.query.filter(
+            cls.day_gan == day_gan
+        ).filter(
+            cls.hour_gen == hour_gen
+        ).first()
+
+    def delete_numerology(self):
+        PreDestination.delete_by_numerology_id(self.id)
+        self.delete(_commit=False, _hard=True)
+        try:
+            db.session.commit()
+            return True
+        except Exception as e:
+            logger.error("删除Numerology失败:{}".format(e), exc_info=True)
+            db.session.rollback()
+            return False
 
 class PreDestination(Base, TimestampMixin):
     __tablename__ = "pre_destination"
@@ -83,10 +101,5 @@ class PreDestination(Base, TimestampMixin):
     name = Column(Text, comment="星名", nullable=False)
 
     @classmethod
-    def exist_num(cls, num, lot_type):
-        query = cls.query.filter(
-            cls.lot_type == lot_type
-        ).filter(
-            cls.num == num
-        )
-        return bool(query.first())
+    def delete_by_numerology_id(cls, numerology_id):
+        db.session.query(cls).filter(cls.numerology_id==numerology_id).delete(synchronize_session=False)
