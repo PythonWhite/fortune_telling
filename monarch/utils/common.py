@@ -3,9 +3,6 @@ from functools import wraps, partial
 from flask import request, g
 
 from monarch.exc.consts import CACHE_ADMIN_USER_TOKEN, CACHE_USER_TOKEN
-from monarch.models.admin_user import AdminUser
-from monarch.models.user import User
-from monarch.models.chat_user import ChatUser
 from monarch.utils.api import biz_success
 from monarch.exc import codes
 from monarch.corelibs.mcredis import mc
@@ -128,3 +125,6 @@ def form_validate(schema):
         return view_wrapper
 
     return wrapper
+
+from monarch.models.admin_user import AdminUser
+from monarch.models.user import User

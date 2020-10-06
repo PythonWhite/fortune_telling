@@ -1,4 +1,3 @@
-from flask import g
 from marshmallow import fields, Schema, validate
 from marshmallow.validate import Length
 from marshmallow.exceptions import ValidationError
@@ -9,37 +8,29 @@ from monarch.utils.date import datetime_to_timestamp
 from monarch.exc.consts import VERIFICATION_WAY
 
 
-class CaptchaSchema(Schema):
-    t = fields.Str(required=True, allow_none=False)
-
-
 class UserLoginSchema(Schema):
     account = fields.Str(required=True, allow_none=False, validate=[Length(min=1, max=64)])
     password = fields.Str(required=True, allow_none=False, validate=[Length(min=1, max=64)])
-    t = fields.Str(required=True, allow_none=False)
-    code = fields.Str(required=True, allow_none=False)
+    captcha_value = fields.Str(required=True, allow_none=False)
+    captcha_id = fields.Str(required=True, allow_none=False)
 
 
 class CreateUserSchema(Schema):
     account = fields.Str(required=True, allow_none=False, validate=[Length(min=1, max=64)])
-    name = fields.Str(required=True, allow_none=False, validate=[Length(min=1, max=64)])
     password = fields.Str(required=True, allow_none=False, validate=[Length(min=8, max=64)])
-    avatar = fields.Str(required=True, allow_none=True)
-    phone = fields.Str(required=True, allow_none=True)
-    email = fields.Str(required=True, allow_none=True)
 
 
 class RetCurrentUserSchema(Schema):
     id = fields.Str()
     account = fields.Str()
-    name = fields.Str()
+    nickname = fields.Str()
     avatar = fields.Str()
     phone = fields.Str()
     email = fields.Str()
 
 
 class UpdateCurrentUserInfoSchema(Schema):
-    name = fields.Str(required=True, allow_none=False)
+    nickname = fields.Str(required=True, allow_none=False)
     avatar = fields.Str(required=True, allow_none=True)
     phone = fields.Str(required=True, allow_none=True)
     email = fields.Str(required=True, allow_none=True)

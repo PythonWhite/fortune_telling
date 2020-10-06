@@ -8,8 +8,8 @@ class Permission(Base, TimestampMixin):
     '''用户权限'''
     __tablename__ = "permission"
 
-    id = Column(Integer, primary_key=True)
-    name = Column(String(64))
+    id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    name = Column(String(64), nullable=False, comment="菜单名称")
     parent_id = Column(Integer, nullable=False, default=0, comment="父级菜单ID")
 
     @staticmethod
@@ -37,10 +37,10 @@ class Permission(Base, TimestampMixin):
 
 
 class PermissionGroup(Base, TimestampMixin):
-    id = Column(Integer, primary_key=True)
-    name = Column(String(64))
-    description = Column(String(500), comment="权限组描述")
-    permissions = Column(JSON)
+    id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    name = Column(String(64), nullable=False, comment="权限名称")
+    description = Column(String(500), nullable=True, comment="权限组描述")
+    permissions = Column(JSON, nullable=False, comment="权限ID集合")
 
     admin_users = relationship(
         "AdminUser",
@@ -64,7 +64,7 @@ class PermissionGroup(Base, TimestampMixin):
             menu_data = menu.to_dict(["id", "name", "parent_id"])
             menu_data["permission"] = menu_data.get("id") in menu_id_set
             menu_list.append(menu_data)
-        return Menu.menu_list_to_tree(menu_list)
+        return Permission.menu_list_to_tree(menu_list)
 
     @classmethod
     def get_by_name(cls, name, exclude_id=None):

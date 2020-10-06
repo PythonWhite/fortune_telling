@@ -4,6 +4,7 @@ from sqlalchemy import UniqueConstraint
 
 from monarch.models.base import Base, TimestampMixin
 from monarch.utils.lots import gen_numbers
+from monarch.utils.model import escape_like
 
 
 class LotsType(Base, TimestampMixin):
@@ -11,6 +12,16 @@ class LotsType(Base, TimestampMixin):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(64), nullable=False)
+
+    @classmethod
+    def query_lots_type(cls, deleted=False):
+        return cls.query.filter(
+            cls.deleted == deleted
+        ).all()
+
+    def delete(self, _hard=False, _commit=True):
+        lots = Lots.get_lots_by_type(self.id)
+        lots.delete(synchronize_session=False)
 
 
 class Lots(Base, TimestampMixin):
@@ -54,6 +65,25 @@ class Lots(Base, TimestampMixin):
             cls.num == num
         )
         return query.first()
+
+    @classmethod
+    def query_lots_by_type(cls, lots_type, keyword=None, query_field=None, sort=1, sort_field=None):
+        query = cls.query.filter(
+            cls.lot_type == lots_type
+        )
+        if query_field and keyword:
+            query_field = getattr(cls, query_field)
+            query = query.filter(
+                query_field.like("%" + escape_like(keyword) + "%")
+            )
+
+        if sort_field:
+            sort_field = getattr(cls, sort_field)
+            if sort == -1:
+                query = query.order_by(sort_field.desc())
+            else:
+                query = query.order_by(sort_field)
+        return query
 
 
 class Numerology(Base, TimestampMixin):

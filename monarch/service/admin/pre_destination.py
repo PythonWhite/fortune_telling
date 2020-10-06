@@ -49,10 +49,3 @@ def delete_numerology(_id):
         return Bizs.fail(msg="删除失败")
     return Bizs.success()
 
-
-def query_numerology(data):
-    pass
-
-
-def add_pre_destination(data):
-    pass

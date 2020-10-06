@@ -1,3 +1,5 @@
+import datetime
+
 DEBUG = (False,)
 ENABLE_DOC = "/"
 SECRET_KEY = "U9b6o6c-uzEn3s1dSJxFm7tCY199cUTQ-7nFEbNGsyF4l6c1pX3oMbqImv20fRC_QOH3LigfeNGKyd0-Ua1jRQ=="
@@ -26,12 +28,12 @@ CELERY_ACCEPT_CONTENT = ["pickle"]
 CELERY_TASK_SERIALIZER = "pickle"
 CELERY_RESULT_SERIALIZER = "pickle"
 CELERY_ROUTES = {}
-CELERYBEAT_SCHEDULE = {
-    "auto_check_deploy_status": {
-        "task": "monarch.tasks.ai.auto_check_deploy_status",
-        "schedule": datetime.timedelta(seconds=AUTO_CHECK_DEPLOY_STATUS)
-    }
-}
+# CELERYBEAT_SCHEDULE = {
+#    "auto_check_deploy_status": {
+#        "task": "monarch.tasks.ai.auto_check_deploy_status",
+#        "schedule": datetime.timedelta(seconds=AUTO_CHECK_DEPLOY_STATUS)
+#    }
+# }
 
 
 # SMS请求域名
