@@ -3,7 +3,7 @@
 from flask_restplus import Resource, Namespace
 from flask_restplus._http import HTTPStatus
 
-from monarch.service.api.captcha import get_captcha
+from monarch.service.api.login import get_captcha
 
 
 class CaptchaDto:

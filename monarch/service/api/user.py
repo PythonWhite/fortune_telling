@@ -6,11 +6,11 @@ from datetime import datetime
 from flask import g, request
 
 from monarch.models.user import User
-from monarch.forms.api import (
+from monarch.forms.api.user import (
     RetCurrentUserSchema,
 )
 from monarch.corelibs.mcredis import mc
-from monarch.util.address import get_ip
+from monarch.utils.address import get_ip
 from monarch.utils.api import Bizs
 from monarch.exc.consts import (
     CACHE_USER_CAPTCHA_KEY,

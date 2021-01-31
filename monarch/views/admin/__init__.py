@@ -1,10 +1,9 @@
 from monarch import config
 from flask import Blueprint, request, g
 from flask_restplus import Api
-from monarch.utils.common import _check_user_login
+from monarch.utils.common import _check_admin_user_login
 from monarch.views.admin.user import ns as user_ns
-from monarch.views.admin.role import ns as role_ns
-from monarch.views.admin.upload import ns as upload_ns
+from monarch.views.admin.lots import ns as lots_ns
 
 
 NO_LOGIN_ROUTE = ["/user/login", "/user/captcha", "/", "/swagger.json"]
@@ -16,11 +15,11 @@ def login_before_request():
         return
 
     token = request.headers.get("token")
-    is_ok, resp = _check_user_login(token)
+    is_ok, resp = _check_admin_user_login(token)
     if not is_ok:
         return resp
 
-    g.user = resp
+    g.admin_user = resp
 
 
 authorizations = {
@@ -36,17 +35,14 @@ def register_admin_api(app):
     blueprint = Blueprint("admin", __name__, url_prefix=BLUEPRINT_URL_PREFIX)
     api = Api(
         blueprint,
-        title="新客服平台接口",
+        title="后台管理",
         version="1.0",
-        description="新客服平台接口",
+        description="后台管理",
         doc=config.ENABLE_DOC,
         authorizations=authorizations,
         security='apikey'
     )
-    api.add_namespace(entry_ns, path="/company_entry")
     api.add_namespace(user_ns, path="/user")
-    api.add_namespace(role_ns, path="/role")
-    api.add_namespace(upload_ns, path="/upload")
-
+    api.add_namespace(lots_ns, path="/lots")
     blueprint.before_request(login_before_request)
     app.register_blueprint(blueprint)

@@ -8,10 +8,6 @@ from marshmallow.decorators import post_load
 from monarch.utils.date import datetime_to_timestamp
 
 
-class CaptchaSchema(Schema):
-    t = fields.Str(required=True, allow_none=False)
-
-
 class UserLoginSchema(Schema):
     account = fields.Str(required=True, allow_none=False, validate=[Length(min=1, max=64)])
     password = fields.Str(required=True, allow_none=False, validate=[Length(min=1, max=64)])

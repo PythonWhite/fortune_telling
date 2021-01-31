@@ -5,6 +5,7 @@ from monarch.models.base import Base, TimestampMixin
 
 
 class ArticleModel(Base, TimestampMixin):
+    """书籍"""
     __tablename__ = "article"
 
     id = Column(Integer, primary_key=True)
@@ -14,7 +15,7 @@ class ArticleModel(Base, TimestampMixin):
     content = Column(LONGTEXT, nullable=False)
     cover = Column(String(255), comment="封面", nullable=True)
     author = Column(String(32), comment="作者", nullable=True)
-    type = Column(Integer, default=0, comment="1原创，2转载，3书籍")
+    type = Column(Integer, default=1, comment="1原创，2转载，3书籍")
 
     @classmethod
     def query_article(cls, keyword, query_field, _type, **kwargs):

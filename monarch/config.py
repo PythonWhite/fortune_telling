@@ -2,7 +2,7 @@ import datetime
 
 DEBUG = (False,)
 ENABLE_DOC = "/"
-SECRET_KEY = "U9b6o6c-uzEn3s1dSJxFm7tCY199cUTQ-7nFEbNGsyF4l6c1pX3oMbqImv20fRC_QOH3LigfeNGKyd0-Ua1jRQ=="
+SECRET_KEY = ""
 
 # SQLALCHEMY 配置
 SQLALCHEMY_DATABASE_URI = (

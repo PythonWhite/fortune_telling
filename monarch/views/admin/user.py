@@ -7,37 +7,21 @@ from monarch.forms.admin.user import (
     UpdateUserSchema,
     UserLoginSchema,
     QueryUserSchema,
-    CaptchaSchema,
-    CreateGroupSchema,
-    UpdateGroupSchema,
-    QueryGroupUsersSchema,
-    UpdateGroupUsersSchema,
     UpdateCurrentUserInfoSchema,
     ResetCurrentUserPasswordSchema,
-    SetUserStatusSchema,
-    SetUserServicesSchema
 )
 from monarch.service.admin.user import (
     get_a_captcha,
     user_login,
     user_logout,
     create_user,
-    query_user,
     update_user,
     delete_user,
-    create_group,
-    update_group,
-    delete_group,
-    query_group_users,
-    update_group_users,
     get_user_menu_tree,
     get_current_user,
     get_current_user_info,
-    set_current_user_status,
     update_current_user_info,
-    set_current_user_services,
     reset_current_user_password,
-    set_user_offline,
 )
 from monarch.utils.common import expect_schema
 
@@ -54,10 +38,9 @@ class Captcha(Resource):
     @ns.response(code=HTTPStatus.OK.value, description="成功")
     @ns.response(code=HTTPStatus.BAD_REQUEST.value, description="参数错误")
     @ns.doc("获取验证码")
-    @expect_schema(ns, CaptchaSchema())
     def get(self):
         """获取验证码"""
-        return get_a_captcha(g.data)
+        return get_a_captcha()
 
 
 @ns.route("/login")
@@ -79,14 +62,6 @@ class UserLogout(Resource):
 
 @ns.route("")
 class UserList(Resource):
-    @ns.doc("查询用户")
-    @ns.response(code=HTTPStatus.OK.value, description="成功查找用户")
-    @ns.response(code=HTTPStatus.NOT_FOUND.value, description="暂无用户")
-    @expect_schema(ns, QueryUserSchema())
-    def get(self):
-        """查询用户"""
-        return query_user(g.data)
-
     @ns.response(code=HTTPStatus.OK.value, description="成功创建用户")
     @ns.response(code=HTTPStatus.NOT_FOUND.value, description="暂无用户")
     @ns.response(code=HTTPStatus.BAD_REQUEST.value, description="参数错误")

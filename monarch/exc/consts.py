@@ -19,7 +19,7 @@ REQUESTS_TIMEOUT = 15
 
 CACHE_USER_CAPTCHA_KEY = "monarch:user:captcha:image:{}"
 CACHE_USER_TOKEN = ""
-CACHE_ADMIN_USER_CAPTCHA = ""
-CACHE_ADMIN_USER_TOKEN = ""
+CACHE_ADMIN_USER_CAPTCHA = "monarch:admin_user:captcha:image{}"
+CACHE_ADMIN_USER_TOKEN = "monarch:admin_user:token:{}"
 
 VERIFICATION_WAY = ["email", "phone"]

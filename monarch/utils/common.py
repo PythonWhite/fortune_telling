@@ -5,7 +5,24 @@ from flask import request, g
 from monarch.exc.consts import CACHE_ADMIN_USER_TOKEN, CACHE_USER_TOKEN
 from monarch.utils.api import biz_success
 from monarch.exc import codes
+from monarch.models.admin_user import AdminUser
 from monarch.corelibs.mcredis import mc
+
+
+def _check_admin_user_login(token):
+    biz_forbidden = partial(biz_success, code=codes.CODE_FORBIDDEN, http_code=codes.HTTP_FORBIDDEN)
+    if not token:
+        return False, biz_forbidden(msg="用户无权限")
+
+    cache_user_token = CACHE_ADMIN_USER_TOKEN.format(token)
+    user_id = mc.get(cache_user_token)
+    if not user_id:
+        return False, biz_forbidden(msg="登录失效，请重新登录")
+
+    user = AdminUser.get(user_id)
+    if not user:
+        return False, biz_forbidden(msg="用户不存在")
+    return True, user
 
 
 def check_admin_login(view):

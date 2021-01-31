@@ -11,3 +11,5 @@ class Menu(Base, TimestampMixin):
     __tablename__ = "menu"
 
     id = Column(Integer, nullable=False)
+    name = Column(String(32), nullable=False, comment="菜单名称")
+    pid = Column(Integer, nullable=False, comment="父ID")

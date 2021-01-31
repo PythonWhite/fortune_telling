@@ -2,7 +2,7 @@ from flask import Blueprint, request, g
 from flask_restplus import Api
 
 from monarch.utils.common import _check_user_login
-from monarch.views.api.captcha import ns as captcha_ns
+from monarch.views.api.login import ns as captcha_ns
 from monarch.views.api.user import ns as user_ns
 from monarch import config
 

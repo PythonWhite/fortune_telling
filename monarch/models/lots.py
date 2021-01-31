@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import Column, DateTime, Integer, String, Text
+from sqlalchemy import Column, DateTime, Integer, String, Text, JSON
 from sqlalchemy import UniqueConstraint
 
 from monarch.models.base import Base, TimestampMixin
@@ -8,15 +8,23 @@ from monarch.utils.model import escape_like
 
 
 class LotsType(Base, TimestampMixin):
+    """签类型"""
     __tablename__ = "lots_type"
 
     id = Column(Integer, primary_key=True)
     name = Column(String(64), nullable=False)
 
+    @property
+    def lots_nums(self):
+        lots = Lots.get_all_by_lots_type(self.id)
+        return len(query)
+
     @classmethod
     def query_lots_type(cls, deleted=False):
         return cls.query.filter(
             cls.deleted == deleted
+        ).order_by(
+            cls.created_at.desc()
         ).all()
 
     def delete(self, _hard=False, _commit=True):
@@ -25,6 +33,7 @@ class LotsType(Base, TimestampMixin):
 
 
 class Lots(Base, TimestampMixin):
+    """签"""
     __tablename__ = "lots"
 
     id = Column(Integer, primary_key=True)
@@ -42,6 +51,13 @@ class Lots(Base, TimestampMixin):
     )
 
     @classmethod
+    def get_all_by_lots_type(cls, lots_type):
+        return cls.query.filter(
+            cls.lot_type == lot_type,
+            cls.deleted == False  # noqa
+        ).all()
+
+    @classmethod
     def exist_num(cls, num, lot_type):
         query = cls.query.filter(
             cls.lot_type == lot_type
@@ -53,7 +69,8 @@ class Lots(Base, TimestampMixin):
     @classmethod
     def random_gen_lot(cls, lot_type):
         query = cls.query.filter(
-            cls.lot_type == lot_type
+            cls.lot_type == lot_type,
+            cls.deleted == False  # noqa
         ).all()
         return gen_numbers(query)
 
@@ -87,6 +104,7 @@ class Lots(Base, TimestampMixin):
 
 
 class Numerology(Base, TimestampMixin):
+    """"""
     __tablename__ = "numerology"
 
     __table_args__ = (
@@ -122,7 +140,9 @@ class Numerology(Base, TimestampMixin):
             db.session.rollback()
             return False
 
+
 class PreDestination(Base, TimestampMixin):
+    """命理前定数"""
     __tablename__ = "pre_destination"
 
     id = Column(Integer, primary_key=True)

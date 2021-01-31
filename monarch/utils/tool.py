@@ -4,7 +4,7 @@ import uuid
 import random
 
 from PIL import ImageFilter
-from captcha.iamge import ImageCaptcha, random_color
+from captcha.image import ImageCaptcha, random_color
 
 
 def random_text(length=4):

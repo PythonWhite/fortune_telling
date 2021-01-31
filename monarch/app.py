@@ -8,7 +8,6 @@ from celery import Celery
 from flask import Flask, current_app, request
 from flask_restplus import Api
 
-from raven.contrib.flask import Sentry
 from sqlalchemy.exc import TimeoutError
 from werkzeug.datastructures import CombinedMultiDict, ImmutableMultiDict
 
@@ -55,9 +54,6 @@ def create_app(name=None, _config=None):
     app = Flask(name or __name__)
     app.config.from_object("monarch.config")
 
-    if config.SENTRY_DSN and not config.DEBUG:
-        Sentry(app, dsn=config.SENTRY_DSN)
-
     db.init_app(app)
     mc.init_app(app)
 
@@ -67,7 +63,7 @@ def create_app(name=None, _config=None):
     setup_before_request(app)
     setup_after_request(app)
 
-    register_internal_app(app)
+    register_admin_api(app)
     register_api(app)
     setup_errorhandler(app)
 
@@ -179,5 +175,5 @@ def setup_after_request(app):
     app.after_request(_request_log)
 
 
-from monarch.views import register_internal_app
+from monarch.views.admin import register_admin_api
 from monarch.views.api import register_api

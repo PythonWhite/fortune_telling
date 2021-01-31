@@ -6,13 +6,11 @@ from flask import g, request
 from monarch.utils.date import datetime_to_timestamp
 
 from monarch.corelibs.captcha import gen_captcha, check_pass
-from monarch.models.user import User, AdminUser
+from monarch.models.admin_user import AdminUser
 from monarch.models.permission import PermissionGroup
 from monarch.utils.api import Bizs, parse_pagination
 from monarch.forms.admin.user import (
     RetCurrentUserSchema,
-    RetQueryUserSchema,
-    RetCurrentUserInfoSchema
 )
 from monarch.exc.consts import (
     CACHE_ADMIN_USER_CAPTCHA,
@@ -23,12 +21,14 @@ from monarch.exc.consts import (
 from monarch.corelibs.mcredis import mc
 
 
-def get_a_captcha(data):
-    t = data.get("t")
+def get_a_captcha():
+    t = shortuuid.uuid()
     code, image_data = gen_captcha(num=4)
     mc.set(CACHE_ADMIN_USER_CAPTCHA.format(t), code, CACHE_FIVE_MINUTE)
+    image_data_b64 = base64.b64encode(image_data).decode('utf-8')
     data = {
-        "image": image_data,
+        "id": t,
+        "b64s": "data:image/png;base64,{}".format(image_data_b64),
     }
     return Bizs.success(data)
 
@@ -39,7 +39,7 @@ def user_login(data):
     t = data.get("t")
     code = data.get("code")
 
-    cache_user_captcha_key = CACHE_USER_CAPTCHA.format(t)
+    cache_user_captcha_key = CACHE_ADMIN_USER_CAPTCHA.format(t)
     captcha_code = mc.get(cache_user_captcha_key)
     if not captcha_code:
         return Bizs.bad_query(msg="验证码不存在")
@@ -106,26 +106,6 @@ def delete_user(uid):
     return Bizs.success()
 
 
-def query_user(data):
-    current_user = g.user
-    role_id = data.get("role_id")
-    enabled = data.get("enabled")
-    is_online = data.get("is_online")
-    data = parse_pagination(
-        User.query_user(
-            company_id=current_user.company_id,
-            enabled=enabled,
-            role_id=role_id,
-            is_online=is_online,
-        )
-    )
-    result, pagination = data["result"], data["pagination"]
-    ret_list = RetQueryUserSchema().dump(result, many=True).data
-    online_num = User.query_user(current_user.company_id, is_online=True).count()
-    ret_data = {"list": ret_list, "pagination": pagination, "online_num": online_num}
-    return Bizs.success(data=ret_data)
-
-
 def get_user_menu_tree():
     current_user = g.admin_user
     menu_tree = current_user.get_menus_tree()
@@ -140,7 +120,7 @@ def get_current_user():
 
 def get_current_user_info():
     current_user = g.admin_user
-    data = RetCurrentUserInfoSchema().dump(current_user).data
+    data = RetCurrentUserSchema().dump(current_user).data
     return Bizs.success(data)
 
 

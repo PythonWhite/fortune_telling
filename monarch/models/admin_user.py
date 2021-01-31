@@ -25,12 +25,12 @@ class AdminUser(Base, TimestampMixin):
     ip = Column(String(32), nullable=True, comment="ip")
     is_admin = Column(Boolean, nullable=False, default=False, comment="是否为超管")
 
-    permissions = relationship(
+    '''permissions = relationship(
         "Permission",
         secondary="admin_user_permission",
         primaryjoin="AdminUser.id==AdminUserPermission.admin_user_id",
         secondaryjoin="PermissionGroup.id==AdminUserPermission.group_id"
-    )
+    )'''
 
     @property
     def password(self):
@@ -65,9 +65,10 @@ class AdminUser(Base, TimestampMixin):
 
     @classmethod
     # @model_cache(CACHE_USER_BY_ACCOUNT, CACHE_DAY)
-    def get_by_account(cls, account, deleted=False, enabled=True):
+    def get_by_account(cls, account, deleted=False):
         return cls.query.filter_by(
-            account=account, deleted=deleted, enabled=enabled
+            account=account,
+            deleted=deleted,
         ).first()
 
     @property
