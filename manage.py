@@ -17,6 +17,7 @@ def init_admin_user():
     AdminUser.create(
         account="admin",
         password="admin123",
+        name="admin",
         is_admin=True
     )
 
