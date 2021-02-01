@@ -52,7 +52,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('num', sa.Integer(), nullable=False, comment='签号'),
     sa.Column('lots_type', sa.Integer(), nullable=False, comment='类型'),
-    sa.Column('contenr', sa.TEXT(), nullable=False, comment='签文'),
+    sa.Column('content', sa.TEXT(), nullable=False, comment='签文'),
     sa.Column('name', sa.String(64), nullable=False, comment='名称'),
     sa.Column('solution', sa.TEXT(), nullable=True, comment='签解'),
     sa.Column('poetry', sa.TEXT(), nullable=True, comment='诗文'),

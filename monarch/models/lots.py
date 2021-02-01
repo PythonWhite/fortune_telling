@@ -17,7 +17,7 @@ class LotsType(Base, TimestampMixin):
     @property
     def lots_nums(self):
         lots = Lots.get_all_by_lots_type(self.id)
-        return len(query)
+        return len(lots)
 
     @classmethod
     def query_lots_type(cls, deleted=False):
@@ -28,8 +28,9 @@ class LotsType(Base, TimestampMixin):
         ).all()
 
     def delete(self, _hard=False, _commit=True):
-        lots = Lots.get_lots_by_type(self.id)
+        lots = Lots.query_lots_by_type(self.id)
         lots.delete(synchronize_session=False)
+        super().delete(_hard=True)
 
 
 class Lots(Base, TimestampMixin):
@@ -38,7 +39,7 @@ class Lots(Base, TimestampMixin):
 
     id = Column(Integer, primary_key=True)
     num = Column(Integer, comment="签号")
-    lot_type = Column(Integer, comment="类型")
+    lots_type = Column(Integer, comment="类型")
     content = Column(Text, comment="签文内容")
     name = Column(String(64), comment="签名")
     solution = Column(Text, comment="解签内容", nullable=True)
@@ -47,20 +48,20 @@ class Lots(Base, TimestampMixin):
     meaning = Column(Text, comment="签意", nullable=True)
 
     __table_args__ = (
-        UniqueConstraint("lot_type", "num", name="type_num"),
+        UniqueConstraint("lots_type", "num", name="type_num"),
     )
 
     @classmethod
     def get_all_by_lots_type(cls, lots_type):
         return cls.query.filter(
-            cls.lot_type == lot_type,
+            cls.lots_type == lots_type,
             cls.deleted == False  # noqa
         ).all()
 
     @classmethod
     def exist_num(cls, num, lot_type):
         query = cls.query.filter(
-            cls.lot_type == lot_type
+            cls.lots_type == lot_type
         ).filter(
             cls.num == num
         )
@@ -69,7 +70,7 @@ class Lots(Base, TimestampMixin):
     @classmethod
     def random_gen_lot(cls, lot_type):
         query = cls.query.filter(
-            cls.lot_type == lot_type,
+            cls.lots_type == lot_type,
             cls.deleted == False  # noqa
         ).all()
         return gen_numbers(query)
@@ -77,7 +78,7 @@ class Lots(Base, TimestampMixin):
     @classmethod
     def get_lot_by_num_and_type(cls, lot_type, num):
         query = cls.query.filter(
-            cls.lot_type == lot_type
+            cls.lots_type == lot_type
         ).filter(
             cls.num == num
         )
@@ -86,7 +87,7 @@ class Lots(Base, TimestampMixin):
     @classmethod
     def query_lots_by_type(cls, lots_type, keyword=None, query_field=None, sort=1, sort_field=None):
         query = cls.query.filter(
-            cls.lot_type == lots_type
+            cls.lots_type == lots_type
         )
         if query_field and keyword:
             query_field = getattr(cls, query_field)

@@ -24,7 +24,7 @@ def delete_lots_type(lotsTypeID):
     lots_type = LotsType.get(lotsTypeID)
     if not lots_type:
         return Bizs.not_found()
-    lots.deleted()
+    lots_type.delete()
     return Bizs.success()
 
 
