@@ -1,10 +1,11 @@
-from datetime import datetime
-from sqlalchemy import Column, DateTime, Integer, String, Text, JSON
+from sqlalchemy import Column, Integer, String, Text, JSON
 from sqlalchemy import UniqueConstraint
 
 from monarch.models.base import Base, TimestampMixin
 from monarch.utils.lots import gen_numbers
 from monarch.utils.model import escape_like
+from monarch.utils import logger
+from monarch.corelibs.store import db
 
 
 class LotsType(Base, TimestampMixin):
@@ -123,12 +124,17 @@ class Numerology(Base, TimestampMixin):
     star_desc = Column(Text(), nullable=False, comment="星宿解释")
 
     @classmethod
-    def get_by_day_hour_gan(cls, day_gan, hour_gen):
-        return cls.query.filter(
+    def get_by_day_hour_gan(cls, day_gan, hour_gen, bans_id=None):
+        query = cls.query.filter(
             cls.day_gan == day_gan
         ).filter(
             cls.hour_gen == hour_gen
-        ).first()
+        )
+        if bans_id:
+            query = query.filter(
+                cls.id != bans_id
+            )
+        return query.first()
 
     def delete_numerology(self):
         PreDestination.delete_by_numerology_id(self.id)
@@ -141,6 +147,21 @@ class Numerology(Base, TimestampMixin):
             db.session.rollback()
             return False
 
+    @classmethod
+    def query_numerology(cls, keyword=None, query_field=None):
+        query = cls.query.filter(
+            cls.deleted == False  # noqa
+        )
+        if query_field and keyword:
+            field = getattr(cls, query_field)
+            query = query.filter(
+                field.like("%" + escape_like(keyword) + "%")
+            )
+        query = query.order_by(
+            cls.deleted_at.desc()
+        )
+        return query
+
 
 class PreDestination(Base, TimestampMixin):
     """命理前定数"""
@@ -152,5 +173,15 @@ class PreDestination(Base, TimestampMixin):
     name = Column(Text, comment="星名", nullable=False)
 
     @classmethod
+    def query_by_numerology_id(cls, numerology_id):
+        query = cls.query.filter(
+            cls.numerology_id == numerology_id,
+            cls.deleted == False  # noqa
+        ).order_by(
+            cls.created_at.desc()
+        )
+        return query
+
+    @classmethod
     def delete_by_numerology_id(cls, numerology_id):
-        db.session.query(cls).filter(cls.numerology_id==numerology_id).delete(synchronize_session=False)
+        db.session.query(cls).filter(cls.numerology_id == numerology_id).delete(synchronize_session=False)

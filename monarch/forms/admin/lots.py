@@ -7,6 +7,7 @@ from monarch.forms.base import (
 )
 from monarch.utils.date import datetime_to_timestamp
 
+
 class CurrentLotsTypeSchema(Schema):
     id = fields.Int()
     name = fields.Str()
@@ -70,3 +71,48 @@ class EditLotsSchema(Schema):
     poetry = fields.Str(required=False)
     p_solution = fields.Str(required=False)
     meaning = fields.Str(required=False)
+
+
+class NumerologySchema(Schema):
+    id = fields.Int()
+    day_gan = fields.Str()
+    hour_gan = fields.Str()
+    hexagram_name = fields.Str()
+    fate_name = fields.Str()
+    fate_desc = fields.Str()
+    fate_poetry = fields.Str()
+    detail = fields.Dict()
+    star_desc = fields.Str()
+
+
+class CreateNumerologySchema(Schema):
+    day_gan = fields.Str(required=True)
+    hour_gan = fields.Str(required=True)
+    hexagram_name = fields.Str(required=True)
+    fate_name = fields.Str(required=True)
+    fate_desc = fields.Str(required=True)
+    fate_poetry = fields.Str(required=True)
+    detail = fields.Dict(required=True)
+    star_desc = fields.Str(required=True)
+
+
+class UpdateNumerologySchema(Schema):
+    day_gan = fields.Str(required=True)
+    hour_gan = fields.Str(required=True)
+    hexagram_name = fields.Str(required=True)
+    fate_name = fields.Str(required=True)
+    fate_desc = fields.Str(required=True)
+    fate_poetry = fields.Str(required=True)
+    detail = fields.Dict(required=True)
+    star_desc = fields.Str(required=True)
+
+
+class QueryNumerologySchema(SearchSchema, PaginationSchema):
+    pass
+
+
+class CurrentPreDistinationSchema(Schema):
+    id = fields.Int()
+    hour_gz = fields.Str()
+    numerology_id = fields.Int()
+    name = fields.Str()

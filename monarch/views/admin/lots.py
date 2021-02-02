@@ -1,6 +1,5 @@
 from flask import g
 from flask_restplus import Resource, Namespace
-from flask_restplus._http import HTTPStatus
 
 from monarch.forms.admin.lots import (
     GetLotsTypeListSchema,
@@ -73,4 +72,4 @@ class LotsResource(Resource):
         return edit_lots(lotsID, g.data)
 
     def delete(self, lotsID):
-        return delete_lots(lotsTypeID)
+        return delete_lots(lotsID)
