@@ -4,10 +4,12 @@ from flask_restplus import Api
 from monarch.utils.common import _check_user_login
 from monarch.views.api.login import ns as captcha_ns
 from monarch.views.api.user import ns as user_ns
+from monarch.views.api.article import ns as article_ns
+from monarch.views.api.lots import ns as lots_ns
 from monarch import config
 
 
-NO_LOGIN_ROUTE = ["/", "/swagger.json", "user/login", "/captcha"]
+NO_LOGIN_ROUTE = ["/", "/swagger.json", "/user/login", "/captcha", "/user/register"]
 BLUEPRINT_URL_PREFIX = "/api/v1"
 
 
@@ -46,6 +48,8 @@ def register_api(app):
 
     api.add_namespace(captcha_ns, path="/captcha")
     api.add_namespace(user_ns, path="/user")
+    api.add_namespace(article_ns, path="/article")
+    api.add_namespace(lots_ns, path="/lots")
 
     blueprint.before_request(login_before_request)
     app.register_blueprint(blueprint)

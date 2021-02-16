@@ -11,8 +11,8 @@ from monarch.exc.consts import VERIFICATION_WAY
 class UserLoginSchema(Schema):
     account = fields.Str(required=True, allow_none=False, validate=[Length(min=1, max=64)])
     password = fields.Str(required=True, allow_none=False, validate=[Length(min=1, max=64)])
-    captcha_value = fields.Str(required=True, allow_none=False)
-    captcha_id = fields.Str(required=True, allow_none=False)
+    # captcha_value = fields.Str(required=True, allow_none=False)
+    # captcha_id = fields.Str(required=True, allow_none=False)
 
 
 class CreateUserSchema(Schema):

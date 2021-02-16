@@ -16,6 +16,7 @@ class ArticleModel(Base, TimestampMixin):
     cover = Column(String(255), comment="封面", nullable=True)
     author = Column(String(32), comment="作者", nullable=True)
     type = Column(Integer, default=1, comment="1原创，2转载，3书籍")
+    likes = Column(Integer, default=0, comment="点赞数")
 
     @classmethod
     def query_article(cls, keyword, query_field, _type, **kwargs):
@@ -28,3 +29,36 @@ class ArticleModel(Base, TimestampMixin):
             query = query.filter(cls.type == _type)
 
         return query.order_by(cls.created_at.desc())
+
+    @classmethod
+    def get_article(cls, title, is_books=True, bans_id=None):
+        query = cls.query.filter(
+            cls.title == title
+        )
+        if is_books:
+            query = query.filter(
+                cls.type != 3
+            )
+        if bans_id:
+            query = query.filter(
+                cls.id != bans_id
+            )
+        return query.first()
+
+    @classmethod
+    def get_articles_likes_top5(cls, is_books=True):
+        query = cls.query
+        if is_books:
+            query = query.filter(
+                cls.type == 3
+            )
+        else:
+            query = query.filter(
+                cls.type != 3
+            )
+        query = query.order_by(
+            cls.likes.desc()
+        ).order_by(
+            cls.updated_at.desc()
+        ).limit(5).all()
+        return query

@@ -4,6 +4,10 @@ DEBUG = (False,)
 ENABLE_DOC = "/"
 SECRET_KEY = ""
 
+UPLOAD_FOLDER = "monarch/static"
+STATIC_URL_PATH = "/static"
+DOMAIN = "http://127.0.0.1:5000"
+
 # SQLALCHEMY 配置
 SQLALCHEMY_DATABASE_URI = (
     "mysql+pymysql://root:root@127.0.0.1:3306/monarch?charset=utf8mb4"

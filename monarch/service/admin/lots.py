@@ -10,7 +10,7 @@ from monarch.utils.api import Bizs, parse_pagination
 
 def create_lots_type(data):
     name = data["name"]
-    LotsType.create(name=name)
+    LotsType.create(**data)
     return Bizs.success()
 
 
@@ -32,7 +32,7 @@ def edit_lots_type(lotsTypeID, data):
     lots_type = LotsType.get(lotsTypeID)
     if not lots_type:
         return Bizs.not_found()
-    lots_type.update(name=data["name"])
+    lots_type.update(**data)
     return Bizs.success()
 
 
@@ -41,8 +41,8 @@ def create_lots(lots_type_id, data):
     if not lots_type:
         return Bizs.not_found()
     if Lots.exist_num(data["num"], lots_type.id):
-        return Bizs.fail(msg="已存在相同的数据")
-    data["lot_type"] = lots_type.id
+        return Bizs.fail(msg="已存在相同的签号")
+    data["lots_type"] = lots_type.id
     Lots.create(**data)
     return Bizs.success()
 
@@ -79,7 +79,7 @@ def delete_lots(lots_id):
     return Bizs.success()
 
 
-def get_lots(self, lotsID):
+def get_lots(lotsID):
     lot = Lots.get(lotsID)
     if not lot:
         return Bizs.not_found()

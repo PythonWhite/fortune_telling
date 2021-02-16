@@ -22,15 +22,15 @@ from monarch.exc.consts import (
 def login(data):
     account = data["account"]
     password = data["password"]
-    captcha_value = data["captcha_value"]
-    captcha_id = data["captcha_id"]
-    captcha_cache_key = CACHE_USER_CAPTCHA_KEY.format(captcha_id)
-    captcha_code = mc.get(captcha_cache_key)
-    if not captcha_code:
-        return Bizs.fail(msg="验证码不存在")
+    # captcha_value = data["captcha_value"]
+    # captcha_id = data["captcha_id"]
+    # captcha_cache_key = CACHE_USER_CAPTCHA_KEY.format(captcha_id)
+    # captcha_code = mc.get(captcha_cache_key)
+    # if not captcha_code:
+    #    return Bizs.fail(msg="验证码不存在")
 
-    if captcha_code != captcha_value:
-        return Bizs.fail(msg="验证码错误")
+    # if captcha_code != captcha_value:
+    #    return Bizs.fail(msg="验证码错误")
 
     user = User.get_by_account(account)
     if not user:

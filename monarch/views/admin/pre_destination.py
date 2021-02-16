@@ -7,6 +7,7 @@ from monarch.forms.admin.lots import (
     QueryNumerologySchema,
     CreateNumerologySchema,
     UpdateNumerologySchema,
+    CreatePreDestinationSchema,
 )
 from monarch.service.admin.pre_destination import (
     add_unmerology,
@@ -14,6 +15,10 @@ from monarch.service.admin.pre_destination import (
     query_numerology,
     update_numerology,
     delete_numerology,
+    query_pre_destination,
+    create_pre_destination,
+    delete_pre_destination,
+    edit_pre_destination,
 )
 from monarch.utils.common import expect_schema
 
@@ -47,3 +52,23 @@ class NumerologyResource(Resource):
 
     def delete(self, numerology_id):
         return delete_numerology(numerology_id)
+
+
+@ns.route("/pre_destination/<int:numerology_id>")
+class PreDestinationListResource(Resource):
+    def get(self, numerology_id):
+        return query_pre_destination(numerology_id)
+
+    @expect_schema(ns, CreatePreDestinationSchema())
+    def post(self, numerology_id):
+        return create_pre_destination(numerology_id, g.data)
+
+
+@ns.route("/<int:pre_destination_id>")
+class PreDestinationResource(Resource):
+    @expect_schema(ns, CreatePreDestinationSchema())
+    def put(self, pre_destination_id):
+        return edit_pre_destination(pre_destination_id, g.data)
+
+    def delete(self, pre_destination_id):
+        return delete_pre_destination(pre_destination_id)

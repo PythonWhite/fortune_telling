@@ -11,6 +11,8 @@ from monarch.utils.date import datetime_to_timestamp
 class CurrentLotsTypeSchema(Schema):
     id = fields.Int()
     name = fields.Str()
+    cover = fields.Str()
+    introduction = fields.Str()
     lots_nums = fields.Int()
     create_at = fields.Method("get_created_at")
 
@@ -24,10 +26,14 @@ class GetLotsTypeListSchema(SearchSchema, PaginationSchema):
 
 class CreateLotsTypeSchema(Schema):
     name = fields.Str(required=True)
+    cover = fields.Str()
+    introduction = fields.Str()
 
 
 class EditLotsTypeSchema(Schema):
     name = fields.Str(required=True)
+    cover = fields.Str()
+    introduction = fields.Str()
 
 
 class CreateLotsSchema(Schema):
@@ -92,7 +98,7 @@ class CreateNumerologySchema(Schema):
     fate_name = fields.Str(required=True)
     fate_desc = fields.Str(required=True)
     fate_poetry = fields.Str(required=True)
-    detail = fields.Dict(required=True)
+    detail = fields.Str(required=True)
     star_desc = fields.Str(required=True)
 
 
@@ -103,7 +109,7 @@ class UpdateNumerologySchema(Schema):
     fate_name = fields.Str(required=True)
     fate_desc = fields.Str(required=True)
     fate_poetry = fields.Str(required=True)
-    detail = fields.Dict(required=True)
+    detail = fields.Str(required=True)
     star_desc = fields.Str(required=True)
 
 
@@ -116,3 +122,8 @@ class CurrentPreDistinationSchema(Schema):
     hour_gz = fields.Str()
     numerology_id = fields.Int()
     name = fields.Str()
+
+
+class CreatePreDestinationSchema(Schema):
+    hour_gz = fields.Str(required=True)
+    name = fields.Str(required=True)

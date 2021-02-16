@@ -67,3 +67,10 @@ class User(Base, TimestampMixin):
 
     def _clean_cache(self):
         pass
+
+    @classmethod
+    def get_by_id(cls, user_id):
+        return cls.query.filter(
+            cls.id == user_id,
+            cls.deleted == False  # noqa
+        ).first()

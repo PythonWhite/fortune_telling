@@ -40,7 +40,7 @@ def upgrade():
     sa.Column('fate_name', sa.String(64), nullable=False, comment='格名'),
     sa.Column('fate_desc', sa.TEXT(), nullable=False, comment='释义'),
     sa.Column('fate_poetry', sa.TEXT(), nullable=False, comment='格诗'),
-    sa.Column('detail', sa.JSON(), nullable=False, comment='详情'),
+    sa.Column('detail', sa.TEXT(), nullable=False, comment='详情'),
     sa.Column('star_desc', sa.TEXT(), nullable=False, comment='星宿释义'),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('day_gan', "hour_gan", name="day_hour_gan")

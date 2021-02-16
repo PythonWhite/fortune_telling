@@ -18,7 +18,7 @@ CACHE_MONTH = 60 * 60 * 24 * 30
 REQUESTS_TIMEOUT = 15
 
 CACHE_USER_CAPTCHA_KEY = "monarch:user:captcha:image:{}"
-CACHE_USER_TOKEN = ""
+CACHE_USER_TOKEN = "monarch:user:token:{}"
 CACHE_ADMIN_USER_CAPTCHA = "monarch:admin_user:captcha:image{}"
 CACHE_ADMIN_USER_TOKEN = "monarch:admin_user:token:{}"
 

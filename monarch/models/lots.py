@@ -14,6 +14,8 @@ class LotsType(Base, TimestampMixin):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(64), nullable=False)
+    cover = Column(String(255), nullable=True, comment="封面")
+    introduction = Column(Text,  nullable=True, comment="简介")
 
     @property
     def lots_nums(self):
@@ -120,15 +122,15 @@ class Numerology(Base, TimestampMixin):
     fate_name = Column(String(64), nullable=False, comment="格名")
     fate_desc = Column(Text(), nullable=False, comment="解释")
     fate_poetry = Column(Text(), nullable=False, comment="格诗")
-    detail = Column(JSON(), nullable=False, comment="详情")
+    detail = Column(Text(), nullable=False, comment="详情")
     star_desc = Column(Text(), nullable=False, comment="星宿解释")
 
     @classmethod
-    def get_by_day_hour_gan(cls, day_gan, hour_gen, bans_id=None):
+    def get_by_day_hour_gan(cls, day_gan, hour_gan, bans_id=None):
         query = cls.query.filter(
             cls.day_gan == day_gan
         ).filter(
-            cls.hour_gen == hour_gen
+            cls.hour_gan == hour_gan
         )
         if bans_id:
             query = query.filter(
@@ -158,7 +160,7 @@ class Numerology(Base, TimestampMixin):
                 field.like("%" + escape_like(keyword) + "%")
             )
         query = query.order_by(
-            cls.deleted_at.desc()
+            cls.created_at.desc()
         )
         return query
 
@@ -181,6 +183,18 @@ class PreDestination(Base, TimestampMixin):
             cls.created_at.desc()
         )
         return query
+
+    @classmethod
+    def get_by_numerology_id_and_hour_gz(cls, numerology_id, hour_gz, bans_id=None):
+        query = cls.query.filter(
+            cls.numerology_id ==numerology_id,
+            cls.hour_gz == hour_gz
+        )
+        if bans_id:
+            query = query.filter(
+                cls.id != bans_id
+            )
+        return query.first()
 
     @classmethod
     def delete_by_numerology_id(cls, numerology_id):
