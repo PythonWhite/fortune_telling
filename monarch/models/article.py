@@ -8,7 +8,7 @@ class ArticleModel(Base, TimestampMixin):
     """书籍"""
     __tablename__ = "article"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     user_id = Column(String(32), nullable=False, comment="管理员ID")
     title = Column(String(255), nullable=False)
     introduction = Column(Text, comment="简介", nullable=False)

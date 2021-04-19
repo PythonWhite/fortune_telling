@@ -7,6 +7,7 @@ from monarch.views.admin.lots import ns as lots_ns
 from monarch.views.admin.pre_destination import ns as pre_destination_ns
 from monarch.views.admin.upload import ns as upload_ns
 from monarch.views.admin.article import ns as article_ns
+from monarch.views.admin.course import ns as course_ns
 
 
 NO_LOGIN_ROUTE = ["/user/login", "/user/captcha", "/", "/swagger.json"]
@@ -50,5 +51,6 @@ def register_admin_api(app):
     api.add_namespace(pre_destination_ns, path="/pre_destination")
     api.add_namespace(upload_ns, path="/upload")
     api.add_namespace(article_ns, path="/article")
+    api.add_namespace(course_ns, path="/course")
     blueprint.before_request(login_before_request)
     app.register_blueprint(blueprint)
