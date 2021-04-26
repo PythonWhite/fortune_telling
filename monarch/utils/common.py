@@ -5,7 +5,7 @@ from flask import request, g
 from monarch.exc.consts import CACHE_ADMIN_USER_TOKEN, CACHE_USER_TOKEN
 from monarch.utils.api import biz_success
 from monarch.exc import codes
-from monarch.models.admin_user import AdminUser
+from monarch.models.user import UserBrowseLog
 from monarch.corelibs.mcredis import mc
 
 
@@ -142,6 +142,24 @@ def form_validate(schema):
         return view_wrapper
 
     return wrapper
+
+
+def user_browse_log(model):
+    """用户浏览记录"""
+    def wrapper(func):
+        @wraps(func)
+        def func_wraps(*args, **kwargs):
+            user = g.user
+            if model.get(kwargs["id"]):
+                UserBrowseLog.create(
+                    model=model.__tablename__,
+                    user_id=user.id,
+                    model_id=kwargs["id"]
+                )
+            return func(*args, **kwargs)
+        return func
+    return wrapper
+
 
 from monarch.models.admin_user import AdminUser
 from monarch.models.user import User

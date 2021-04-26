@@ -74,3 +74,29 @@ class User(Base, TimestampMixin):
             cls.id == user_id,
             cls.deleted == False  # noqa
         ).first()
+
+
+class UserBrowseLog(Base, TimestampMixin):
+    """用户浏览记录"""
+
+    __tablename__ = "user_browse_log"
+
+    __table_args__ = (
+        Index("user_id", "user_id"),
+        Index("model", "model")
+    )
+
+    id = Column(Integer(), nullable=False, primary_key=True)
+    model = Column(String(32), nullable=False, comment="记录类型")
+    user_id = Column(String(32), nullable=False, comment="用户ID")
+    model_id = Column(String(32), nullable=False, comment="类型ID")
+
+    @classmethod
+    def get_user_browse_log(cls, user_id, model):
+        query = cls.query.filter(
+            cls.user_id == user_id,
+            cls.model == model
+        ).order_by(
+            cls.created_at.desc()
+        )
+        return query

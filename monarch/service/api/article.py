@@ -33,3 +33,11 @@ def get_article(article_id):
         return Bizs.fail("文章不存在")
     data = CurrentArticleSchema().dump(article).data
     return Bizs.success(data)
+
+
+def like_article(article_id):
+    article = ArticleModel.get(article_id)
+    if not article:
+        return Bizs.fail("文章不存在")
+    article.update(likes=article.likes + 1)
+    return Bizs.success()
