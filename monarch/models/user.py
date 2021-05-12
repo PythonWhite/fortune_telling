@@ -86,7 +86,7 @@ class UserBrowseLog(Base, TimestampMixin):
         Index("model", "model")
     )
 
-    id = Column(Integer(), nullable=False, primary_key=True)
+    id = Column(Integer(), nullable=False, primary_key=True, autoincrement=True)
     model = Column(String(32), nullable=False, comment="记录类型")
     user_id = Column(String(32), nullable=False, comment="用户ID")
     model_id = Column(String(32), nullable=False, comment="类型ID")

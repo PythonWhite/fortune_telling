@@ -19,6 +19,13 @@ class ArticleModel(Base, TimestampMixin):
     likes = Column(Integer, default=0, comment="点赞数")
 
     @classmethod
+    def get_by_ids(cls, ids):
+        return cls.query.filter(
+            cls.id.in_(ids),
+            cls.deleted == False  # noqa
+        ).all()
+
+    @classmethod
     def query_article(cls, keyword, query_field, _type, **kwargs):
         query = cls.query
         if keyword and query_field:

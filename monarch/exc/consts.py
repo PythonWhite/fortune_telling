@@ -44,3 +44,10 @@ ARABIC_TO_CN_NUM_MAP = {
 }
 
 STARTING_YEAR = 1984
+
+
+DEFAULT_SERVICES = []
+
+
+class ServiceType:
+    LOTS = ""

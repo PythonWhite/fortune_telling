@@ -27,8 +27,8 @@ def get_courses(data):
 
 
 @user_browse_log(CourseModel)
-def get_course(course_id):
-    course = CourseModel.get(course_id)
+def get_course(id):
+    course = CourseModel.get(id)
     if not course:
         return Bizs.fail(msg="课程不存在")
     data = RetCourseSchema().dump(course).data

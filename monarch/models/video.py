@@ -30,6 +30,13 @@ class CourseModel(Base, TimestampMixin):
     marked_price = Column(DECIMAL(6, 2), nullable=False, default=0, comment="标价")
 
     @classmethod
+    def get_by_ids(cls, ids):
+        return cls.query.filter(
+            cls.id.in_(ids),
+            cls.deleted == False  # noqa
+        ).all()
+
+    @classmethod
     def get_courses_likes_top5(cls):
         query = cls.query.filter(
             cls.is_publication == True,  # noqa

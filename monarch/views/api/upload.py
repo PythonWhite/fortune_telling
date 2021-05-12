@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from flask import request
 from flask_restplus import Resource, Namespace
-from monarch.service.admin.upload import upload
+from monarch.service.api.upload import upload
 
 
 class UploadDto:

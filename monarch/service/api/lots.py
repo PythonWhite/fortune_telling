@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from flask import g
 from monarch.models.lots import LotsType, Lots
+from monarch.models.service import ServiceLog
 from monarch.forms.admin.lots import (
     CurrentLotsTypeSchema,
     CurrentLotsSchema,
 )
-from monarch.utils.api import Bizs, parse_pagination
-
+from monarch.utils.api import Bizs
 
 
 def get_lots_type():
@@ -19,6 +20,7 @@ def get_lots_type():
 def drawLots(typeID):
     lots = Lots.random_gen_lot(typeID)
     data = CurrentLotsSchema().dump(lots).data
+    ServiceLog.create_by_lots(g.user.id, data)
     return Bizs.success(data)
 
 

@@ -5,6 +5,7 @@ from monarch.forms.admin.article import (
     CurrentArticleSchema,
 )
 from monarch.utils.api import Bizs, parse_pagination
+from monarch.utils.common import user_browse_log
 
 
 def get_articles_likes_top5():
@@ -27,8 +28,9 @@ def get_articles(data):
     })
 
 
-def get_article(article_id):
-    article = ArticleModel.get(article_id)
+@user_browse_log(ArticleModel)
+def get_article(id):
+    article = ArticleModel.get(id)
     if not article:
         return Bizs.fail("文章不存在")
     data = CurrentArticleSchema().dump(article).data

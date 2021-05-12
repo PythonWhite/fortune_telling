@@ -5,15 +5,22 @@ from datetime import datetime
 
 from flask import g, request
 
-from monarch.models.user import User
+from monarch.models.user import User, UserBrowseLog
+from monarch.models.article import ArticleModel
+from monarch.forms.admin.article import (
+    CurrentArticleSchema
+)
+from monarch.models.video import CourseModel
+from monarch.forms.admin.course import CoursesSchema
 from monarch.forms.api.user import (
     RetCurrentUserSchema,
 )
+from monarch.models.service import Service, ServiceLog
 from monarch.corelibs.mcredis import mc
 from monarch.utils.address import get_ip
 from monarch.utils.api import Bizs
 from monarch.exc.consts import (
-    CACHE_USER_CAPTCHA_KEY,
+    # CACHE_USER_CAPTCHA_KEY,
     CACHE_USER_TOKEN,
     CACHE_TWELVE_HOUR,
 )
@@ -91,3 +98,28 @@ def update_current_user_info(data):
     current_user = g.user
     current_user.update(**data)
     return Bizs.success()
+
+
+def get_current_user_browse_articles():
+    logs = UserBrowseLog.get_user_browse_log(g.user.id, ArticleModel.__tablename__)
+    article_ids = [log.model_id for log in logs]
+    articles = ArticleModel.get_by_ids(article_ids)
+    result = CurrentArticleSchema().dump(articles, many=True).data
+    return Bizs.success(result)
+
+
+def get_current_user_browse_course():
+    logs = UserBrowseLog.get_user_browse_log(g.user.id, CourseModel.__tablename__)
+    course_ids = [log.model_id for log in logs]
+    courses = CourseModel.get_by_ids(course_ids)
+    result = CoursesSchema().dump(courses, many=True).data
+    return Bizs.success(result)
+
+
+def get_current_user_service_logs(service_type):
+    service = Service.get_by_name(service_type)
+    if not service:
+        return Bizs.fail(msg="服务不存在")
+    logs = ServiceLog.get_logs_by_user_id(g.user.id, service.id)
+    result = [log.content for log in logs]
+    return Bizs.success(result)
