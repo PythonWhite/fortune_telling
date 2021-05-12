@@ -50,6 +50,11 @@ class CoursesSchema(Schema):
     is_free = fields.Boolean(required=True)
     marked_price = fields.Float(required=True)
     updated_at = fields.Method("get_updated_at")
+    created_at = fields.Method("get_created_at")
+    is_publication = fields.Bool()
+
+    def get_created_at(self, obj):
+        return datetime_to_timestamp(obj.created_at)
 
     def get_updated_at(self, obj):
         return datetime_to_timestamp(obj.updated_at)

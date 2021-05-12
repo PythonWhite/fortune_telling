@@ -69,6 +69,7 @@ class CourseModel(Base, TimestampMixin):
     @property
     def chapters(self):
         result = ChapterModel.get_chapters_by_course_id(self.id)
+        print(result)
         if result:
             result = ChapterModel.format_chapters_to_tree(result)
         return result or []
@@ -81,7 +82,7 @@ class ChapterModel(Base, TimestampMixin):
 
     id = Column(String(32), primary_key=True, default=shortuuid.uuid, nullable=False)
     name = Column(String(64), nullable=False, comment="章节名称")
-    course_id = Column(Integer, nullable=False, comment="课程ID")
+    course_id = Column(String(32), nullable=False, comment="课程ID")
     video_url = Column(String(255), nullable=True, comment="视频地址")
     pid = Column(String(32), nullable=False, default="0", comment="上一章节ID")
     nid = Column(String(32), nullable=False, default="0", comment="下一章节ID")
@@ -90,7 +91,8 @@ class ChapterModel(Base, TimestampMixin):
     @classmethod
     def get_chapters_by_course_id(cls, course_id):
         query = cls.query.filter(
-            cls.course_id == course_id
+            cls.course_id == course_id,
+            cls.deleted == False  # noqa
         ).all()
         return query
 
@@ -98,10 +100,13 @@ class ChapterModel(Base, TimestampMixin):
     def sort(cls, data, datas):
         result = []
         temp = data.pop("0", None)
+        print(temp)
         while temp:
-            temp["children"] = cls.sort(datas[temp["id"]["children"]], datas)
+            if datas.get(temp["id"]) and datas[temp["id"]].get("children"):
+                temp["children"] = cls.sort(datas[temp["id"]]["children"], datas)
             result.append(temp)
             temp = data.pop(temp["id"], None)
+            print(result)
         return result
 
     @classmethod
@@ -113,4 +118,5 @@ class ChapterModel(Base, TimestampMixin):
             data["children"][chapter.pid] = schema_data
             chapter_dicts.get(chapter.id, {"children": {}}).update(**schema_data)
 
-        return cls.sort(chapter_dicts.get("0", {}), chapter_dicts)
+        print(chapter_dicts)
+        return cls.sort(chapter_dicts.get("0", {}).get("children", {}), chapter_dicts)

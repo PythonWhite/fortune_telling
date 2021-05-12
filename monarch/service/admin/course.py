@@ -46,8 +46,8 @@ def get_course(course_id):
 def query_course(data):
     keyword = data.get("keyword")
     field = data.get("field")
-    sort = data.get("sort")
-    sort_field = data.get("sort_field")
+    sort = data.get("sort", -1)
+    sort_field = data.get("sort_field", "likes")
     type = data.get("type")
     is_publication = data.get("is_publication")
     query = CourseModel.query_course(keyword, field, sort, sort_field, type, is_publication)
