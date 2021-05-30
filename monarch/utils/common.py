@@ -150,14 +150,18 @@ def user_browse_log(model):
         @wraps(func)
         def func_wraps(*args, **kwargs):
             user = g.user
-            if model.get(kwargs["id"]):
+            if model.get(args[0]) and not UserBrowseLog.get_by_user_id_and_model_id(
+            g.user.id, model.__tablename__, args[0]):
+                instance = model.get(args[0])
+                if hasattr(instance, "views"):
+                    instance.update(views=instance.views + 1)
                 UserBrowseLog.create(
                     model=model.__tablename__,
                     user_id=user.id,
-                    model_id=kwargs["id"]
+                    model_id=args[0]
                 )
             return func(*args, **kwargs)
-        return func
+        return func_wraps
     return wrapper
 
 

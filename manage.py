@@ -4,6 +4,7 @@ from flask_script import Manager
 from monarch.app import create_app
 from monarch.corelibs.store import db
 from monarch.models.admin_user import AdminUser
+from monarch.models.service import Service
 
 application = create_app('monarch')
 application.config['DEBUG'] = True
@@ -20,6 +21,10 @@ def init_admin_user():
         name="admin",
         is_admin=True
     )
+
+@manager.command
+def init_default_service():
+    Service.create_default_services()
 
 if __name__ == '__main__':
     manager.run()

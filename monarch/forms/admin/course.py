@@ -38,6 +38,11 @@ class RetCourseSchema(Schema):
     is_free = fields.Boolean(required=True)
     marked_price = fields.Float(required=True)
     chapters = fields.List(fields.Dict())
+    views = fields.Int()
+    created_at = fields.Method("get_created_at")
+
+    def get_created_at(self, obj):
+        return datetime_to_timestamp(obj.created_at)
 
 
 class CoursesSchema(Schema):
@@ -52,6 +57,7 @@ class CoursesSchema(Schema):
     updated_at = fields.Method("get_updated_at")
     created_at = fields.Method("get_created_at")
     is_publication = fields.Bool()
+    views = fields.Int()
 
     def get_created_at(self, obj):
         return datetime_to_timestamp(obj.created_at)

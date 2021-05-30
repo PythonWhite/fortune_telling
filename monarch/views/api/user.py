@@ -11,7 +11,12 @@ from monarch.service.api.user import (
     get_current_user_info,
     update_current_user_info,
     reset_current_user_password,
+    get_current_user_browse_articles,
+    get_current_user_browse_course,
+    get_current_user_service_logs,
+    get_hot_top5,
 )
+from monarch.forms.base import PaginationSchema
 from monarch.forms.api.user import (
     UpdateCurrentUserInfoSchema,
     UserLoginSchema,
@@ -85,3 +90,30 @@ class ResetCurrentUserPasswordResource(Resource):
     def post(self):
         """用户重置密码"""
         return reset_current_user_password(g.data)
+
+
+@ns.route("/logs/articles")
+class GetArticlesLogsResource(Resource):
+    @ns.doc("文章浏览记录")
+    @expect_schema(ns, PaginationSchema())
+    def get(self):
+        return get_current_user_browse_articles()
+
+
+@ns.route("/logs/courses")
+class GetCourseLogsResource(Resource):
+    @expect_schema(ns, PaginationSchema())
+    def get(self):
+        return get_current_user_browse_course()
+
+
+@ns.route("/logs/<service_type>")
+class GetUserServiceLogsResource(Resource):
+    def get(self, service_type):
+        return get_current_user_service_logs(service_type)
+
+
+@ns.route("/hot/top5")
+class HotTop5(Resource):
+    def get(self):
+        return get_hot_top5()

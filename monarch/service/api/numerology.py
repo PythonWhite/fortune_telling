@@ -3,6 +3,7 @@
 from monarch.external.lunar_datetime import LunarDatetime, DayException
 from monarch.models.lots import Numerology, PreDestination
 from monarch.forms.admin.lots import NumerologySchema
+from monarch.utils import logger
 from monarch.utils.api import Bizs
 
 
@@ -30,6 +31,7 @@ def numerology(data):
             )
     except DayException:
         return Bizs.fail(msg="时间错误")
+    logger.info("八字:日干{},时干{},时之{}".format(lunardatetime.dayGan, lunardatetime.hourGan, lunardatetime.hourZhi))
     numerology = Numerology.get_by_day_hour_gan(lunardatetime.dayGan, lunardatetime.hourGan)
     if not numerology:
         return Bizs.fail(msg="没有找到相关命理前定数")
@@ -40,4 +42,5 @@ def numerology(data):
     result["pre_destination_id"] = pre_destination.id
     result["star_name"] = pre_destination.name
     result["hour_zhi"] = pre_destination.hour_gz
+    result["star_poetry"] = pre_destination.star_poetry
     return Bizs.success(result)

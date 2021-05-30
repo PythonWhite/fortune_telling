@@ -173,6 +173,7 @@ class PreDestination(Base, TimestampMixin):
     hour_gz = Column(String(64), comment="时干支", nullable=False)
     numerology_id = Column(Integer(), nullable=False)
     name = Column(Text, comment="星名", nullable=False)
+    star_poetry = Column(String(255), nullable=False, comment="解释")
 
     @classmethod
     def query_by_numerology_id(cls, numerology_id):

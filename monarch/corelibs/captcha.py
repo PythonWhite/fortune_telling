@@ -7,9 +7,9 @@ CHARTS = 'abcdefghijklmnopqrestuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
 
 def gen_captcha(num=4):
-    text=''
+    text = ''
     for i in range(0, num):
-        text +=random.choice(CHARTS)
+        text += random.choice(CHARTS)
     image = ImageCaptcha()
     data = image.generate(text)
     return text, data.read()
@@ -22,4 +22,3 @@ def check_pass(code, captcha_code):
         return True
 
     return False
-    

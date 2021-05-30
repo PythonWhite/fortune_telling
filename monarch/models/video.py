@@ -28,6 +28,14 @@ class CourseModel(Base, TimestampMixin):
     is_publication = Column(Boolean, nullable=False, default=False, comment="是否发布")
     is_free = Column(Boolean, nullable=False, default=True, comment="是否免费")
     marked_price = Column(DECIMAL(6, 2), nullable=False, default=0, comment="标价")
+    views = Column(Integer, nullable=False, default=0, comment="浏览量")
+
+    @classmethod
+    def get_by_ids(cls, ids):
+        return cls.query.filter(
+            cls.id.in_(ids),
+            cls.deleted == False  # noqa
+        ).all()
 
     @classmethod
     def get_courses_likes_top5(cls):

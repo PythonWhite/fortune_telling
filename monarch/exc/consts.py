@@ -44,3 +44,26 @@ ARABIC_TO_CN_NUM_MAP = {
 }
 
 STARTING_YEAR = 1984
+
+
+DEFAULT_SERVICES = [
+    {
+        "name": "灵签",
+        "key": "lot",
+        "url": ""
+    },
+    {
+        "name": "命理前定数",
+        "key": "mlqds",
+        "url": ""
+    },
+    {
+        "name": "四柱预测",
+        "key": "szyc",
+        "url": ""
+    }
+]
+
+
+class ServiceType:
+    LOTS = "lot"

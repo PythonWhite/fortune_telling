@@ -6,7 +6,9 @@ from monarch.views.api.login import ns as captcha_ns
 from monarch.views.api.user import ns as user_ns
 from monarch.views.api.article import ns as article_ns
 from monarch.views.api.lots import ns as lots_ns
+from monarch.views.api.upload import ns as upload_ns
 from monarch.views.api.numerology import ns as numerology_ns
+from monarch.views.api.course import ns as course_ns
 from monarch import config
 
 
@@ -51,7 +53,9 @@ def register_api(app):
     api.add_namespace(user_ns, path="/user")
     api.add_namespace(article_ns, path="/article")
     api.add_namespace(lots_ns, path="/lots")
+    api.add_namespace(upload_ns, path="/upload")
     api.add_namespace(numerology_ns, path="/numerology")
+    api.add_namespace(course_ns, path="/course")
 
     blueprint.before_request(login_before_request)
     app.register_blueprint(blueprint)

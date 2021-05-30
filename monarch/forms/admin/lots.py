@@ -122,8 +122,10 @@ class CurrentPreDistinationSchema(Schema):
     hour_gz = fields.Str()
     numerology_id = fields.Int()
     name = fields.Str()
+    star_poetry = fields.Str()
 
 
 class CreatePreDestinationSchema(Schema):
     hour_gz = fields.Str(required=True)
     name = fields.Str(required=True)
+    star_poetry = fields.Str(required=True)

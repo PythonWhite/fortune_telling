@@ -27,6 +27,7 @@ class RetCurrentUserSchema(Schema):
     avatar = fields.Str()
     phone = fields.Str()
     email = fields.Str()
+    sex = fields.Int()
 
 
 class UpdateCurrentUserInfoSchema(Schema):

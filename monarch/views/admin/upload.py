@@ -6,7 +6,7 @@ from monarch.service.admin.upload import upload
 
 
 class UploadDto:
-    ns  = Namespace("upload", description="上传")
+    ns = Namespace("upload", description="上传")
 
 
 ns = UploadDto.ns
