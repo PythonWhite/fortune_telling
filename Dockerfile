@@ -9,4 +9,4 @@ RUN pip3 install --upgrade pip
 COPY requirements.txt /app
 RUN pip3 install --no-cache-dir  -r requirements.txt
 COPY . /app
-CMD /usr/local/bin/gunicorn -c gunicorn_config.py manage:app
+CMD /usr/local/bin/gunicorn -c gunicorn_config.py monarch.wsgi:application

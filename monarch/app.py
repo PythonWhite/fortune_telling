@@ -51,7 +51,7 @@ LOGGING_CONFIG = {
 
 
 def create_app(name=None, _config=None):
-    app = Flask(name or __name__)
+    app = Flask(name or __name__, static_url_path=config.STATIC_URL_PATH)
     app.config.from_object("monarch.config")
 
     db.init_app(app)
