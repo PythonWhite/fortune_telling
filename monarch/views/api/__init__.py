@@ -12,7 +12,11 @@ from monarch.views.api.course import ns as course_ns
 from monarch import config
 
 
-NO_LOGIN_ROUTE = ["/", "/swagger.json", "/user/login", "/captcha", "/user/register"]
+NO_LOGIN_ROUTE = [
+    "/", "/swagger.json", "/user/login", "/captcha", "/user/register",
+    "/article/top5", "/article/list", "/course/top5", "/course/list",
+
+]
 BLUEPRINT_URL_PREFIX = "/api/v1"
 
 
