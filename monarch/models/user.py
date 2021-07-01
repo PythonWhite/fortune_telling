@@ -1,7 +1,7 @@
 import shortuuid
 import random
 
-from sqlalchemy import Index, Column, DateTime, Integer, String
+from sqlalchemy import Index, Column, DateTime, Integer, String, JSON, Date
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -108,3 +108,35 @@ class UserBrowseLog(Base, TimestampMixin):
             cls.created_at.desc()
         )
         return query
+
+
+class ActionLog(Base, TimestampMixin):
+    """操作记录"""
+    __tablename__ = "action_log"
+
+    __table_args__ = (
+        Index("user_id", "user_id"),
+        Index("day", "day"),
+    )
+
+    id = Column(Integer(), nullable=False, primary_key=True, autoincrement=True)
+    action = Column(String(32), nullable=False, comment="操作类型")
+    user_id = Column(String(32), nullable=False, comment="用户ID")
+    contnent = Column(JSON, nullable=True, comment="内容")
+    day = Column(Date, nullable=False, comment="时间")
+
+    @classmethod
+    def get_by_user_id_and_day(cls, user_id, action, day):
+        return cls.query.filter(
+            cls.user_id == user_id,
+            cls.day == day,
+            cls.action == action
+        ).first()
+
+    @classmethod
+    def get_by_day_and_action(cls, action, start, end):
+        return cls.query.filter(
+            cls.action == action,
+            cls.day >= start,
+            cls.end <= end
+        )

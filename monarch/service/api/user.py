@@ -5,7 +5,7 @@ from datetime import datetime
 
 from flask import g, request
 
-from monarch.models.user import User, UserBrowseLog
+from monarch.models.user import User, UserBrowseLog, ActionLog
 from monarch.models.article import ArticleModel
 from monarch.forms.admin.article import (
     CurrentArticleSchema
@@ -58,6 +58,12 @@ def login(data):
         "account": user.account,
         "id": user.id
     }
+    if not ActionLog.get_by_user_id_and_day(user.id, "登录", datetime.now().date()):
+        ActionLog.create(
+            user_id=user.id,
+            action="登录",
+            day=datetime.now().date()
+        )
     return Bizs.success(result)
 
 
